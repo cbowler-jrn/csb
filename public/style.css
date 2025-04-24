@@ -1,0 +1,50 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+canvas {
+  display: block;
+}
+
+#text-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none; /* Ensure the text doesn't interfere with canvas interactions */
+}
+
+.star-text {
+  position: absolute;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  white-space: pre-wrap; /* Preserve newlines in the text */
+  padding: 5px; /* Add padding to ensure text doesn't touch the edges of the rectangle */
+}
+
+.star-text .name {
+  text-decoration: underline; /* Underline only the name */
+}
+
+.star-text .message {
+  text-decoration: none; /* Ensure the message is not underlined */
+}
+
+button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
