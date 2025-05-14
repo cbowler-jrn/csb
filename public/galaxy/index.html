@@ -11,9 +11,74 @@
   </head>
   <body>
     <header><button class="send" onclick="location.href=`${window.location.origin}`;">Send a Message</button></header>
-    <main><div id="text-container"></div></main>
+    <main>
+      <div id="text-container"></div>
+
+      <!-- Modal for Remembering Mr Scott-Blore -->
+      <div id="chrisModal" class="modal hidden">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+
+          <div class="modal-body">
+            <div class="modal-text">
+              <h1 style="font-weight: bold;">Remembering Mr Scott-Blore</h1>
+              <p>
+                Mr Scott-Blore was a respected teacher, a dear colleague and a very popular member of staff among the whole school community. He loved his subject and he loved his students and he felt passionately about ensuring all students could learn and master the world of computing. He used his sense of fun and humor to build strong relationships with students, built on mutual trust and respect, and he always took the time to ensure that his lessons were engaging for all. As a colleague and friend to many, Mr Scott-Blore was kind, compassionate, and friendly and talked with such love about his wife and his little boy, always sharing the latest photos from the weekend!
+              </p>
+              <br />
+              <p>
+                He is so deeply missed in our school community, but his legacy will live on in the curriculum he built, the lunchtime club he created, and the memories we have and share of him with one another.
+              </p>
+              <br />
+              <p>
+                Loved and never forgotten.
+              </p>
+              <!-- Optional: Add a link to donate -->
+              <a href="https://www.gofundme.com" target="_blank" class="gofundme-link">
+                <img src="../gofundme.png" alt="GoFundMe" class="gofundme-logo">
+              </a>
+            </div>
+
+            <div class="modal-image">
+              <img src="../csb.png" alt="Chris Scott-Blore">
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
     <script src="../stars.js"></script>
     <script src="../superStar.js"></script>
     <script src="../sketch.js"></script>
+
+    <script>
+      // Function to toggle modal visibility
+      function toggleModal() {
+        const modal = document.getElementById("chrisModal");
+        if (modal.classList.contains("hidden")) {
+          modal.classList.remove("hidden");
+        } else {
+          modal.classList.add("hidden");
+        }
+      }
+
+      // Add event listener for the close button
+      document.addEventListener("DOMContentLoaded", () => {
+        const closeBtn = document.querySelector(".close");
+        if (closeBtn) {
+          closeBtn.addEventListener("click", () => {
+            document.getElementById("chrisModal").classList.add("hidden");
+          });
+        }
+      });
+
+      // Add event listener for modal opening on clicking on Chris
+      function mousePressed() {
+        const d = dist(mouseX, mouseY, chris.getX(), chris.getY());
+        if (d < 20) {  // Adjust the distance condition as needed
+          toggleModal();  // Toggle modal visibility
+        }
+      }
+    </script>
   </body>
 </html>

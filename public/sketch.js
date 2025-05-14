@@ -1,19 +1,43 @@
-var galaxy = [];
-var mouse = false;
-var touch = false;
-var currentX = 0;
-var currentY = 0;
-var currentSize = 0;
-var move = 0.01;
+let galaxy = [];
+let mouse = false;
+let touch = false;
+let currentX = 0;
+let currentY = 0;
+let currentSize = 0;
+let move = 0.01;
 
-var shootX = 200;
-var shootY = random(20, 80);
+let shootX = 200;
+let shootY;
 
-var i = 0;
+let i = 0;
+let chris;
+let chrisModalOpen = false;
+let chrisImage;
+
+// Modal content
+let chrisModalData = {
+  title: "Chris the Superstar",
+  description: `Mr Scott-Blore was a respected teacher, a dear colleague and a very popular member of staff among the whole school community.  He loved his subject and he loved his students and he felt passionately about ensuring all students could learn and master the world of computing.  He used his sense of fun and humour to build strong relationships with students, built on mutual trust and respect and he always took the time to ensure that his lessons were engaging for all.  As a colleague and friend to many, Mr Scott-Blore was kind, compassionate and friendly and talked with such love about his wife and his little boy, always sharing the latest photos from the weekend! He is so deeply missed in our school community but his legacy will live on in the curriculum he built, the lunchtime club he created and the memories we have and share of him with one another. Loved and never forgotten.`,
+  imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg" // Replace with your image
+};
+
+function preload() {
+  chrisImage = loadImage(chrisModalData.imageUrl);
+}
 
 function setup() {
-  createCanvas(window.screen.width, window.screen.height);
+  createCanvas(windowWidth, windowHeight);
+
+  createCanvas(windowWidth, windowHeight).id("bgCanvas");
+
+  // Send canvas to the background
+  const canvas = document.getElementById("bgCanvas");
+  canvas.style.position = "absolute";
+  canvas.style.top = "0";
+  canvas.style.left = "0";
+  canvas.style.zIndex = "-1"; // 👈 Push it behind everything
   chris = new Superstar();
+  shootY = random(20, 80);
 
   fetch("/get-data")
     .then((response) => response.json())
@@ -31,49 +55,6 @@ function setup() {
   setInterval(shoot, 10);
 }
 
-function wrapText(text, maxChars) {
-  let result = [];
-  let currentLine = '';
-  
-  // Split the text into words
-  const words = text.split(' ');
-  
-  for (const word of words) {
-    // If adding the next word would exceed the line length
-    if (currentLine.length + word.length > maxChars) {
-      // If the current line isn't empty, add it to results
-      if (currentLine.length > 0) {
-        result.push(currentLine);
-        currentLine = '';
-      }
-      
-      // If the word itself is longer than maxChars, split it
-      if (word.length > maxChars) {
-        let i = 0;
-        while (i < word.length) {
-          result.push(word.substring(i, i + maxChars));
-          i += maxChars;
-        }
-      } else {
-        currentLine = word;
-      }
-    } else {
-      if (currentLine.length > 0) {
-        currentLine += ' ' + word;
-      } else {
-        currentLine = word;
-      }
-    }
-  }
-  
-  // Add the last line if it's not empty
-  if (currentLine.length > 0) {
-    result.push(currentLine);
-  }
-  
-  return result;
-}
-
 function shoot() {
   if (shootX > windowWidth) {
     shootX = -random(5000, 15000);
@@ -83,17 +64,22 @@ function shoot() {
     shootY = shootY + 2;
   }
 }
+
 function draw() {
   background(0, 0, 35);
+
+  // Shooting stars
   fill(255);
   ellipse(shootX - 15, shootY, 3, 3, 100);
   ellipse(shootX - 10, shootY, 3, 3, 100);
   ellipse(shootX - 5, shootY, 3, 3, 200);
   ellipse(shootX, shootY, 3);
+
+  // Move and draw Chris
   chris.setX(chris.getX() + 0.2);
   chris.place();
 
-  for (let amount = 0; amount < galaxy.length; amount += 1) {
+  for (let amount = 0; amount < galaxy.length; amount++) {
     galaxy[amount].place();
 
     if (
@@ -113,8 +99,9 @@ function draw() {
       const wrappedLines = wrapText(message, 60);
       const fullText = [name, ...wrappedLines].join("\n");
     
-      let maxLineWidth = textWidth(name); 
-      wrappedLines.forEach(line => {
+      // Measure size of text box
+      let maxLineWidth = textWidth(name);
+      wrappedLines.forEach((line) => {
         const lineWidth = textWidth(line);
         if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
       });
@@ -126,32 +113,41 @@ function draw() {
       const rectWidth = maxLineWidth + padding * 2;
       const rectHeight = totalHeight + padding * 2;
     
+      // Initial position near star
+      let rectX = galaxy[amount].getX() + 20;
+      let rectY = galaxy[amount].getY();
+    
+      // Adjust X to keep box on screen
+      if (rectX + rectWidth > width) {
+        rectX = width - rectWidth - 10;
+      }
+      if (rectX < 0) {
+        rectX = 10;
+      }
+    
+      // Optional: Adjust Y to stay within screen vertically
+      if (rectY + rectHeight > height) {
+        rectY = height - rectHeight - 10;
+      }
+    
+      // Draw box background
       fill(0);
       noStroke();
-      rect(
-        galaxy[amount].getX() + 20,
-        galaxy[amount].getY(),
-        rectWidth,
-        rectHeight
-      );
+      rect(rectX, rectY, rectWidth, rectHeight);
     
-      // Draw the text
+      // Draw text
       fill(255);
       noStroke();
       textAlign(LEFT, TOP);
-      text(
-        fullText,
-        galaxy[amount].getX() + 20 + padding,
-        galaxy[amount].getY() + padding
-      );
+      text(fullText, rectX + padding, rectY + padding);
     
-      // Draw underline for the name
+      // Underline the name
       stroke(255);
       line(
-        galaxy[amount].getX() + 20 + padding,
-        galaxy[amount].getY() + padding + textAscent(),
-        galaxy[amount].getX() + 20 + padding + textWidth(name),
-        galaxy[amount].getY() + padding + textAscent()
+        rectX + padding,
+        rectY + padding + textAscent(),
+        rectX + padding + textWidth(name),
+        rectY + padding + textAscent()
       );
     
       currentX = galaxy[amount].getX();
@@ -163,7 +159,6 @@ function draw() {
     }
   }
 
-  print(touch);
   if (
     mouseX > currentX - currentSize &&
     mouseX < currentX + currentSize &&
@@ -174,4 +169,107 @@ function draw() {
   } else {
     cursor(ARROW);
   }
+  
 }
+
+function mousePressed() {
+  const d = dist(mouseX, mouseY, chris.getX(), chris.getY());
+  const modal = document.getElementById("chrisModal");
+
+  if (d < chris.size / 2) { // Check if the click is inside the Chris star
+    if (modal.classList.contains("hidden")) {
+      modal.classList.remove("hidden");
+    } else {
+      modal.classList.add("hidden");
+    }
+  }
+}
+
+
+
+
+function wrapText(text, maxChars) {
+  let result = [];
+  let currentLine = '';
+  const words = text.split(' ');
+
+  for (const word of words) {
+    if (currentLine.length + word.length > maxChars) {
+      if (currentLine.length > 0) {
+        result.push(currentLine);
+        currentLine = '';
+      }
+
+      if (word.length > maxChars) {
+        let i = 0;
+        while (i < word.length) {
+          result.push(word.substring(i, i + maxChars));
+          i += maxChars;
+        }
+      } else {
+        currentLine = word;
+      }
+    } else {
+      if (currentLine.length > 0) {
+        currentLine += ' ' + word;
+      } else {
+        currentLine = word;
+      }
+    }
+  }
+
+  if (currentLine.length > 0) {
+    result.push(currentLine);
+  }
+
+  return result;
+}
+
+function drawChrisModal() {
+  if (!chrisModalOpen) return;  // Only draw modal if it's open
+
+  const modalWidth = 800;
+  const modalHeight = 500;
+  const x = (width - modalWidth) / 2;
+  const y = (height - modalHeight) / 2;
+
+  // Dark overlay
+  fill(0, 180);
+  noStroke();
+  rect(0, 0, width, height);
+
+  // Modal box
+  fill(255);
+  stroke(255);
+  rect(x, y, modalWidth, modalHeight, 10);
+
+  // Title
+  fill(0);
+  noStroke();
+  textAlign(CENTER, TOP);
+  textSize(18);
+  text(chrisModalData.title, x + modalWidth / 2, y + 20);
+
+  // Image
+  if (chrisImage) {
+    image(chrisImage, x + 25, y + 60, modalWidth - 50, 180);
+  }
+
+  // Description
+  fill(0);
+  textSize(14);
+  textAlign(LEFT, TOP);
+  let wrappedDesc = wrapText(chrisModalData.description, 110).join("\n");
+  text(wrappedDesc, x + 20, y + 260);
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const closeBtn = document.querySelector(".close");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      document.getElementById("chrisModal").classList.add("hidden");
+      chrisModalOpen = false;  // Track modal state
+    });
+  }
+});
