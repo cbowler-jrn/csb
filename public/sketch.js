@@ -66,9 +66,11 @@ function shoot() {
 }
 
 function draw() {
+  noCursor();
   background(0, 0, 35);
+  cursor(ARROW);
 
-  // Shooting stars
+  // Shoting stars
   fill(255);
   ellipse(shootX - 15, shootY, 3, 3, 100);
   ellipse(shootX - 10, shootY, 3, 3, 100);
@@ -78,6 +80,15 @@ function draw() {
   // Move and draw Chris
   chris.setX(chris.getX() + 0.2);
   chris.place();
+
+  if (
+    mouseX > chris.getX() - chris.getSize() &&
+    mouseX < chris.getX() + chris.getSize() &&
+    mouseY > chris.getY() - chris.getSize() &&
+    mouseY < chris.getY() + chris.getSize()
+  ) {
+    cursor(HAND);
+  }
 
   for (let amount = 0; amount < galaxy.length; amount++) {
     galaxy[amount].place();
@@ -166,20 +177,6 @@ function draw() {
     mouseY < currentY + currentSize
   ) {
     cursor(HAND);
-  }
-  
-}
-
-function mousePressed() {
-  const d = dist(mouseX, mouseY, chris.getX(), chris.getY());
-  const modal = document.getElementById("chrisModal");
-
-  if (d < chris.size / 2) { // Check if the click is inside the Chris star
-    if (modal.classList.contains("hidden")) {
-      modal.classList.remove("hidden");
-    } else {
-      modal.classList.add("hidden");
-    }
   }
   
 }
