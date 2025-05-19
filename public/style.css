@@ -3,7 +3,9 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  font-family: Arial, sans-serif; /* Ensure consistent font for the entire page */
 }
+
 canvas {
   display: block;
 }
@@ -43,8 +45,125 @@ button {
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow for better visibility */
 }
 
 button:hover {
   background-color: #0056b3;
+}
+
+#chrisModal.hidden {
+  display: none;  /* When the modal has the 'hidden' class, it is hidden */
+}
+
+#chrisModal {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: block;  /* Initially visible when no 'hidden' class is applied */
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.7); /* Slightly darker for better contrast */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 800px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.modal-body {
+  display: flex;
+  gap: 20px;
+}
+
+.modal-text {
+  flex: 2;
+}
+
+.modal-image {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.modal-image img {
+  width: 200px; /* increase this */
+  border-radius: 12px;
+  margin-top: 1.5rem; /* pushes image down so it doesn’t hit the close button */
+}
+
+.gofundme-link {
+  display: block;
+  margin-top: 30px;
+}
+
+.gofundme-logo {
+  width: 140px;
+}
+
+.close {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: 36px; /* ⬅️ Increase this for a larger button */
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff; /* Or use #333 if your background is light */
+  z-index: 10;
+}
+
+.close:hover {
+  color: red;
+}
+
+/* Ensure modal content adjusts for mobile screens */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95%; /* Ensure modal takes full width on small screens */
+    padding: 20px;
+  }
+
+  .modal-body {
+    flex-direction: column; /* Stack the text and image vertically on smaller screens */
+    gap: 10px;
+  }
+
+  .modal-image img {
+    max-width: 100%; /* Allow image to scale down on mobile */
+  }
+}
+
+#bgCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Ensures the canvas stays behind the rest of the content */
 }

@@ -24,9 +24,9 @@ class Superstar {
   }
 
 setX(newX) {
-if (newX > windowWidth){
-this.x = 0;} else{
-this.x = newX;}
+  if (newX > windowWidth){
+  this.x = 0;} else{
+  this.x = newX;}
 
-}
+  }
 }

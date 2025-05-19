@@ -5,10 +5,13 @@ class star {
     this.size = random(3, 6);
     this.message = messagesent;
     this.name = name;
+this.yMove = random(-0.05,0.05)
   }
   place() {
+    noStroke();
     fill(255, 255, 255);
     ellipse(this.x, this.y, random(this.size - random(1, 2), this.size));
+    this.y = this.y + this.yMove;
   }
 
   getX() {
